@@ -170,38 +170,7 @@ void main(void) {
 
     for (int i = 0; i < NUM_OF_TILES; i++) {
         D_800FD7F0[i].value = i;
-        switch (D_800FD7F0[i].value) {
-            case 0:
-                printf("FireFlower1:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 1:
-                printf("Shell1:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 2:
-                printf("1UP1:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 3:
-                printf("Mushroom1:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 4:
-                printf("Bowser:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 5:
-                printf("FireFlower2:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 6:
-                printf("Shell2:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 7:
-                printf("1UP2:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            case 8:
-                printf("Mushroom2:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-                break;
-            default:
-            //execution should never get here
-            printf("%d:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", D_800FD7F0[i].value, D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-        }
+        printf("%s:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", itemImagesArray[D_800FD7F0[i].value], D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
     }
 
     //print data in rows and columns like the game does
