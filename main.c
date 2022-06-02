@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "types.h"
 
 #define NUM_OF_TILES 9
@@ -20,6 +21,10 @@ char Mushroom2String[] = "Mush";
 //2 is 1UP
 //3 is mushroom
 //4 is bowser
+//5 is fire flower
+//6 is shell
+//7 is 1UP
+//8 is mushroom
 
 char* itemImagesArray[] = {
 FireFlower1String,
@@ -153,7 +158,12 @@ void func_800F8314_CF784(void) {
 }
 
 void main(void) {
-    D_800C2FF4 = 0x6BDFA48E; //start initial main seed (seed right before GetRandomByte call)
+    char seedString[16];
+    char* tempString;
+    start: ;
+    printf("Enter a hex seed: ");
+    gets(seedString);
+    D_800C2FF4 = (u32)strtoul (seedString, &tempString, 16);
     D_800FD7E0 = 0x19971204; //sub rng starts with this initial constant (always initialized to this value)
     setInitialPanelPositions();
 
@@ -162,37 +172,30 @@ void main(void) {
     func_800F7B6C_CEFDC(temp); //set inital sub rng
     func_800F8314_CF784();
 
-//0 is fire flower
-//1 is shell
-//2 is 1UP
-//3 is mushroom
-//4 is bowser
-
     for (int i = 0; i < NUM_OF_TILES; i++) {
         D_800FD7F0[i].value = i;
-        printf("%s:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", itemImagesArray[D_800FD7F0[i].value], D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
+        //printf("%s:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", itemImagesArray[D_800FD7F0[i].value], D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
     }
 
     //print data in rows and columns like the game does
-    //something off below
-    s32 foundPanels = 0;
+    s32 panelVals[3][3];
     for (int i = 0; i < 9; i++) {
-        f32 panelX = D_800FD7F0[i].x;
-        f32 panelY = D_800FD7F0[i].y;
-        f32 panelZ = D_800FD7F0[i].z;
-        s32 panelValue = D_800FD7F0[i].value;
+        // normalize coords to act as array indices
+        s32 Zcoord = (s32)D_800FD7F0[i].z + 1;
+        s32 Xcoord = (s32)D_800FD7F0[i].x + 1;
 
-        for (int j = 0; j < 9; j++) {
-            f32 curX = panelPositionsInOrder[j].x;
-            f32 curY = panelPositionsInOrder[j].y;
-            f32 curZ = panelPositionsInOrder[j].z;
-            if (panelX == curX && panelY == curY && panelZ == curZ) {
-                if (foundPanels % 3 == 0) {
-                    printf("\n");
-                }
-                printf ("%s\t", itemImagesArray[j]);
-                foundPanels++;
-            }
-        }
+        // set values for the item at the correct location
+        panelVals[Zcoord][Xcoord] = D_800FD7F0[i].value;
     }
+
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+        // print panel values in display order
+            printf("%s\t", itemImagesArray[panelVals[i][j]]);
+        }
+
+        printf("\n");
+    }
+    printf("\n\n");
+    goto start;
 }
