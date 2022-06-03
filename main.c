@@ -4,7 +4,7 @@
 #include "types.h"
 
 #define NUM_OF_TILES 9
-Vec4t D_800FD7F0[NUM_OF_TILES];
+Vec4t tileData[NUM_OF_TILES];
 
 char FireFlower1String[] = "Flower";
 char Mushroom1String[] = "Mush";
@@ -38,155 +38,155 @@ oneUp2String,
 Mushroom2String
 };
 
-u32 D_800FD7E0;
-u32 D_800C2FF4;
+u32 subSeed;
+u32 mainSeed;
+s32 panelVals[3][3];
 
-Vec3f panelPositionsInOrder[9] =  {
-    -1.0f, 0.0f, -1.0f, //top left
-    0.0f, 0.0f, -1.0f, //top middle
-    1.0f, 0.0f, -1.0f, //top left
-
-    -1.0f, 0.0f, 0.0f, //left middle
-    0.0f, 0.0f, 0.0f, //middle
-    1.0f, 0.0f, 0.0f, //right middle
-
-    -1.0f, 0.0f, 1.0f, //bottom right
-    0.0f, 0.0f, 1.0f, //bottom middle
-    1.0f, 0.0f, 1.0f, //bottom right
-
-};
+// statistics
+u32 bowsers[9] = {0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 void setInitialPanelPositions(void) {
-    D_800FD7F0[0].x = -1.0f;
-    D_800FD7F0[0].y = 0.0f;
-    D_800FD7F0[0].z = -1.0f;
+    tileData[0].x = -1.0f;
+    tileData[0].y = 0.0f;
+    tileData[0].z = -1.0f;
 
-    D_800FD7F0[1].x = -1.0f;
-    D_800FD7F0[1].y = 0.0f;
-    D_800FD7F0[1].z = 0.0f;
+    tileData[1].x = -1.0f;
+    tileData[1].y = 0.0f;
+    tileData[1].z = 0.0f;
 
-    D_800FD7F0[2].x = -1.0f;
-    D_800FD7F0[2].y = 0.0f;
-    D_800FD7F0[2].z = 1.0f;
+    tileData[2].x = -1.0f;
+    tileData[2].y = 0.0f;
+    tileData[2].z = 1.0f;
 
-    D_800FD7F0[3].x = 0.0f;
-    D_800FD7F0[3].y = 0.0f;
-    D_800FD7F0[3].z = -1.0f;
+    tileData[3].x = 0.0f;
+    tileData[3].y = 0.0f;
+    tileData[3].z = -1.0f;
 
-    D_800FD7F0[4].x = 0.0f;
-    D_800FD7F0[4].y = 0.0f;
-    D_800FD7F0[4].z = 0.0f;
+    tileData[4].x = 0.0f;
+    tileData[4].y = 0.0f;
+    tileData[4].z = 0.0f;
 
-    D_800FD7F0[5].x = 0.0f;
-    D_800FD7F0[5].y = 0.0f;
-    D_800FD7F0[5].z = 1.0f;
+    tileData[5].x = 0.0f;
+    tileData[5].y = 0.0f;
+    tileData[5].z = 1.0f;
 
-    D_800FD7F0[6].x = 1.0f;
-    D_800FD7F0[6].y = 0.0f;
-    D_800FD7F0[6].z = -1.0f;
+    tileData[6].x = 1.0f;
+    tileData[6].y = 0.0f;
+    tileData[6].z = -1.0f;
 
-    D_800FD7F0[7].x = 1.0f;
-    D_800FD7F0[7].y = 0.0f;
-    D_800FD7F0[7].z = 0.0f;
+    tileData[7].x = 1.0f;
+    tileData[7].y = 0.0f;
+    tileData[7].z = 0.0f;
 
-    D_800FD7F0[8].x = 1.0f;
-    D_800FD7F0[8].y = 0.0f;
-    D_800FD7F0[8].z = 1.0f;
+    tileData[8].x = 1.0f;
+    tileData[8].y = 0.0f;
+    tileData[8].z = 1.0f;
 }
 
 void func_800F7B6C_CEFDC(u16 arg0) {
-    D_800FD7E0 = arg0 * D_800FD7E0;
-    D_800FD7E0 += arg0;
+    subSeed = arg0 * subSeed;
+    subSeed += arg0;
 }
 
 u8 GetRandomByte(void) {
-    D_800C2FF4 = D_800C2FF4 * 0x41C64E6D + 0x3039;
-    return (D_800C2FF4 + 1) >> 16;
+    mainSeed = mainSeed * 0x41C64E6D + 0x3039;
+    return (mainSeed + 1) >> 16;
 }
 
-u16 func_800F7AFC_CEF6C(u16 arg0) {
-    D_800FD7E0 = D_800FD7E0 * 0x19971204;
-    D_800FD7E0 = (D_800FD7E0 + 0x19760831) >> 0x10;
-    if (arg0 == 0) {
-        return D_800FD7E0;
+u16 random_in_range(u16 range) {
+    subSeed = subSeed * 0x19971204;
+    subSeed = (subSeed + 0x19760831) >> 0x10;
+    if (range == 0) {
+        return subSeed;
     } else {
-        return (D_800FD7E0 % arg0);
+        return (subSeed % range);
     }
 }
 
-void func_800F8314_CF784(void) {
+void swapTiles(void) {
     Vec4t temp_f0;
-    s16 temp_s0;
-    s16 phi_v1;
-    u16 temp_s3 = func_800F7AFC_CEF6C(0x200);
+    s16 tile1;
+    s16 tile2;
+    u16 numSwaps = random_in_range(0x200);
     u16 i;
 
-    for (i = 0; i < temp_s3; i++) {
-        temp_s0 = func_800F7AFC_CEF6C(NUM_OF_TILES);
+    for (i = 0; i < numSwaps; i++) {
+        tile1 = random_in_range(NUM_OF_TILES);
 
-        if (temp_s0 >= NUM_OF_TILES) {
-            temp_s0 = 0;
+        if (tile1 >= NUM_OF_TILES) {
+            tile1 = 0;
         }
 
-        if (func_800F7AFC_CEF6C(0) & 1) {
-            phi_v1 = temp_s0 + 1;
+        if (random_in_range(0) & 1) {
+            tile2 = tile1 + 1;
         } else {
-            phi_v1 = temp_s0 - 1;
+            tile2 = tile1 - 1;
         }
 
-        if (phi_v1 >= NUM_OF_TILES) {
-            phi_v1 = 0;
-        } else if (phi_v1 < 0) {
-            phi_v1 = 8;
+        if (tile2 >= NUM_OF_TILES) {
+            tile2 = 0;
+        } else if (tile2 < 0) {
+            tile2 = 8;
         }
         
-        temp_f0.x = D_800FD7F0[phi_v1].x;
-        temp_f0.y = D_800FD7F0[phi_v1].y;
-        temp_f0.z = D_800FD7F0[phi_v1].z;
-        temp_f0.value = D_800FD7F0[phi_v1].value;
+        temp_f0.x = tileData[tile2].x;
+        temp_f0.z = tileData[tile2].z;
 
-        D_800FD7F0[phi_v1].x = D_800FD7F0[temp_s0].x;
-        D_800FD7F0[phi_v1].y = D_800FD7F0[temp_s0].y;
-        D_800FD7F0[phi_v1].z = D_800FD7F0[temp_s0].z;
-        D_800FD7F0[phi_v1].value = D_800FD7F0[temp_s0].value;
+        tileData[tile2].x = tileData[tile1].x;
+        tileData[tile2].z = tileData[tile1].z;
 
-        D_800FD7F0[temp_s0].x = temp_f0.x;
-        D_800FD7F0[temp_s0].y = temp_f0.y;
-        D_800FD7F0[temp_s0].z = temp_f0.z;
-        D_800FD7F0[temp_s0].value = temp_f0.value;
+        tileData[tile1].x = temp_f0.x;
+        tileData[tile1].z = temp_f0.z;
+    }
+}
+
+void do_game(u32 seed) {
+    mainSeed = seed;
+    subSeed = 0x19971204; //sub rng starts with this initial constant (always initialized to this value)
+    setInitialPanelPositions();
+
+    u8 subseedSeed = GetRandomByte();
+
+    func_800F7B6C_CEFDC(subseedSeed); //set inital sub rng
+    swapTiles();
+
+    for (int i = 0; i < NUM_OF_TILES; i++) {
+        tileData[i].value = i;
+    }
+
+    for (int i = 0; i < 9; i++) {
+        // normalize coords to act as array indices
+        s32 Zcoord = (s32)tileData[i].z + 1;
+        s32 Xcoord = (s32)tileData[i].x + 1;
+
+        // set values for the item at the correct location
+        panelVals[Zcoord][Xcoord] = tileData[i].value;
+
+        if (tileData[i].value == 4) {
+            bowsers[(Zcoord * 3) + Xcoord]++;
+        }
     }
 }
 
 void main(void) {
-    char seedString[16];
-    char* tempString;
-    start: ;
-    printf("Enter a hex seed: ");
-    gets(seedString);
-    D_800C2FF4 = (u32)strtoul (seedString, &tempString, 16);
-    D_800FD7E0 = 0x19971204; //sub rng starts with this initial constant (always initialized to this value)
-    setInitialPanelPositions();
+    //char seedString[16];
+    //char* tempString;
+    // start: ;
+    // printf("Enter a hex seed: ");
+    // gets(seedString);
+    //mainSeed = (u32)strtoul (seedString, &tempString, 16);
+    
+    for (u32 i = 0; i < 0xFFFFFFFF; i++) {
+        do_game(i);
+        if ((i % 0x10000) == 0) {
+            printf("%d: ", i);
+            for (u8 j = 0; j < 9; j++) {
+                printf("%d ", bowsers[j]);
+            }
+            printf("\n");
+        }
+   }
 
-    u8 temp = GetRandomByte();
-
-    func_800F7B6C_CEFDC(temp); //set inital sub rng
-    func_800F8314_CF784();
-
-    for (int i = 0; i < NUM_OF_TILES; i++) {
-        D_800FD7F0[i].value = i;
-        //printf("%s:\n\tX:%1.1f\n\tY:%1.1f\n\tZ:%1.1f\n", itemImagesArray[D_800FD7F0[i].value], D_800FD7F0[i].x, D_800FD7F0[i].y, D_800FD7F0[i].z);
-    }
-
-    //print data in rows and columns like the game does
-    s32 panelVals[3][3];
-    for (int i = 0; i < 9; i++) {
-        // normalize coords to act as array indices
-        s32 Zcoord = (s32)D_800FD7F0[i].z + 1;
-        s32 Xcoord = (s32)D_800FD7F0[i].x + 1;
-
-        // set values for the item at the correct location
-        panelVals[Zcoord][Xcoord] = D_800FD7F0[i].value;
-    }
 
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
@@ -196,6 +196,6 @@ void main(void) {
 
         printf("\n");
     }
-    printf("\n\n");
-    goto start;
+    // printf("\n\n");
+    // goto start;
 }
