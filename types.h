@@ -34,12 +34,11 @@ typedef struct Vec3s {
                s32 z;
 } Vec3s;
 
-typedef struct Vec4t {
-               f32 x;
-               f32 y;
-               f32 z;
+typedef struct Tile {
+               s32 x;
+               s32 z;
                s32 value;
-} Vec4t;
+} Tile;
 
 //#define va_arg(AP,TYPE) (AP = (__gnuc_va_list) ((char *) (AP) + __va_rounded_size (TYPE)), *((TYPE *) (void *) ((char *) (AP) - ((sizeof (TYPE) < __va_rounded_size (char) ? sizeof (TYPE) : __va_rounded_size (TYPE))))))
 
