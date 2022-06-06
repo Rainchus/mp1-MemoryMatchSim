@@ -16,7 +16,11 @@ class Gamestate:
     sub_seed: c_uint32
 
     def __init__(self, main_seed: int):
-        self.tiles = [0, 3, 6, 1, 4, 7, 2, 5, 8]
+        self.tiles = [
+            0, 3, 6,
+            1, 4, 7,
+            2, 5, 8
+        ]
         self.main_seed = c_uint32(main_seed)
         self.sub_seed = c_uint32(SUB_SEED_START)
 
@@ -27,16 +31,14 @@ mushroom = TileValue("mushroom", "🍄")
 bowser = TileValue("bowser", "👹")
 
 symbol_order: list[TileValue] = [
-    flower, shell, oneup, mushroom, bowser, flower, shell, oneup, mushroom
+    flower, shell, oneup, mushroom, bowser,
+    flower, shell, oneup, mushroom
 ]
 
-main_seed_vals = Counter()
-sub_seed_vals = Counter()
 tile_configs = Counter()
 
 def get_random_byte(state: Gamestate):
     state.main_seed = c_int32(state.main_seed.value * 0x41C64E6D + 0x3039)
-    main_seed_vals[state.main_seed.value] += 1
     return c_uint8((state.main_seed.value + 1) >> 16)
 
 def seed_initial_subseed(state:Gamestate, rand_byte: c_uint8):
@@ -46,7 +48,6 @@ def seed_initial_subseed(state:Gamestate, rand_byte: c_uint8):
 def getRandInRange(state:Gamestate, range: int):
     state.sub_seed = c_uint32(state.sub_seed.value * SUB_SEED_START)
     state.sub_seed = c_uint32(c_uint32(state.sub_seed.value + 0x19760831).value >> 16)
-    sub_seed_vals[state.sub_seed.value] += 1
     if range == 0:
         return state.sub_seed.value
     else:
@@ -67,7 +68,6 @@ def shuffle_tiles(state: Gamestate):
         s2 %= 9
 
         state.tiles[s1], state.tiles[s2] = state.tiles[s2], state.tiles[s1]
-        tile_configs[hashable_tiles(state.tiles)] += 1
 
 def print_results(state: Gamestate):
     print_order: list[TileValue] = [None] * 9
@@ -83,10 +83,15 @@ def run_game(start_seed: int):
     state = Gamestate(start_seed)
     x = get_random_byte(state)
     seed_initial_subseed(state, x)
+    print(f"{start_seed}: {state.sub_seed.value:X}")
     shuffle_tiles(state)
+    tile_configs[hashable_tiles(state.tiles)] += 1
 
-    # print_results(state)
+# for i in range(74):
+#     run_game(i)
 
-for i in range(0x400):
-    run_game(i)
-#print(len(tile_configs))
+run_game(1)
+run_game(72)
+run_game(143)
+
+print(tile_configs)
