@@ -227,12 +227,35 @@ void print_num_random_freq(void) {
 }
 
 void main(void) {
-    for (u32 i = 0; i < 1000; i++) {
-        do_game(i);
+    // for (u32 i = 0; i < 1000; i++) {
+    //     do_game(i);
+    // }
+
+    do_game(0x40000);
+
+    //print data in rows and columns like the game does
+    s32 panelVals[3][3];
+    for (int i = 0; i < 9; i++) {
+        // normalize coords to act as array indices
+        s32 Zcoord = tileData[i].z + 1;
+        s32 Xcoord = tileData[i].x + 1;
+
+        // set values for the item at the correct location
+        panelVals[Zcoord][Xcoord] = tileData[i].value;
     }
 
+    for (int i = 0; i < 3; i++) {
+        for (int j = 0; j < 3; j++) {
+        // print panel values in display order
+            printf("%s\t", itemImagesArray[panelVals[i][j]]);
+        }
+
+        printf("\n");
+    }
+    printf("\n\n");
+
     //print_num_random_freq();
-    print_num_swap_freqs();
-    print_board_freqs();
+    // print_num_swap_freqs();
+    // print_board_freqs();
     //print_bowsers();
 }
